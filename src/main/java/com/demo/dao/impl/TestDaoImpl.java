@@ -1,9 +1,10 @@
 package com.demo.dao.impl;
 
-import com.demo.dao.TestDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+
+import com.demo.dao.TestDao;
 
 /**
  * create by lorne on 2017/11/8
@@ -18,6 +19,7 @@ public class TestDaoImpl implements TestDao {
     @Override
     public int save(String name) {
         String sql = "insert into t_test(name) values(?)";
-        return jdbcTemplate.update(sql,name);
+        // DataAccessException -- spring 5 中的异常类型
+        return jdbcTemplate.update(sql, name);
     }
 }

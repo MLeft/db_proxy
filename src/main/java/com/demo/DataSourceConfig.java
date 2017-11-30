@@ -1,12 +1,16 @@
 package com.demo;
 
-import com.alibaba.druid.pool.DruidDataSource;
-import com.demo.db.DataSourceProxy;
-import com.lorne.core.framework.utils.config.ConfigHelper;
+import javax.sql.DataSource;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import javax.sql.DataSource;
+import com.alibaba.druid.pool.DruidDataSource;
+import com.alibaba.fastjson.JSON;
+import com.demo.db.DataSourceProxy;
+import com.lorne.core.framework.utils.config.ConfigHelper;
 
 /**
  * create by lorne on 2017/8/17
@@ -14,14 +18,16 @@ import javax.sql.DataSource;
 @Configuration
 public class DataSourceConfig {
 
+    private static Logger log = LoggerFactory.getLogger(DataSourceConfig.class);
+
     private ConfigHelper configHelper;
 
-    public DataSourceConfig() {
+    public void reloadDataSource() {
         configHelper = new ConfigHelper("db.properties");
-    }
 
-    private void reloadDataSource(){
-        String [] names = configHelper.getStringValue("db.name").split(",");
+        log.debug("重载数据源开始>>>");
+        log.debug("共扫描到数据源: {}", JSON.toJSONString(configHelper.getStringArrayValue("db.name")));
+        String[] names = configHelper.getStringArrayValue("db.name");
         for(String name:names){
             DruidDataSource dataSource = new DruidDataSource();
             dataSource.setUrl(configHelper.getStringValue(String.format("%s.datasource.url",name)));
@@ -36,7 +42,9 @@ public class DataSourceConfig {
             dataSource.setTestWhileIdle(true);
             dataSource.setPoolPreparedStatements(false);
             DataSourceProxy.addDataSource(name,dataSource);
+            log.debug("添加库 {} 到数据源", name);
         }
+        log.debug("重载数据源结束<<<");
     }
 
     @Bean
