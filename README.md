@@ -13,7 +13,6 @@
      PRIMARY KEY (`id`)
    ) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=latin1;
 
-
    create database db2;
    use db2;
    CREATE TABLE `t_test` (
@@ -27,7 +26,7 @@
 
    ```properties
    #jdbc连接配置
-   db.name=db1,db2,db3
+   db.name=db1,db2
    db1.datasource.url = jdbc:mysql://localhost:3306/db1
    db1.datasource.username = root
    db1.datasource.password = mysql
@@ -74,6 +73,10 @@
    配置db.properties
 
    ```properties
+   db.name=db1,db2,db3
+
+   # ....
+
    db3.datasource.url = jdbc:mysql://localhost:3306/db3
    db3.datasource.username = root
    db3.datasource.password = mysql
